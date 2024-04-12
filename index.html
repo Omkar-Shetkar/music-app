@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Ragas Clock</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courgette&display=swap">
+    <style>
+        /* Styling */
+        body {
+            font-family: 'Courgette', cursive; /* Musical, artistic font */
+            text-align: center;
+            background-color: #e8d9ff; /* Soft pastel background for a calming atmosphere */
+            color: #2b2b2b;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 3rem; /* Larger, elegant heading */
+            color: #6a2c70;
+        }
+
+        #raga-container {
+            margin-top: 20px;
+            width: 90%; /* Responsive width */
+            max-width: 600px; /* Maximum width */
+        }
+
+        #raga-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #raga-list li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #6a2c70; /* Deep purple border */
+            border-radius: 8px;
+            display: block;
+            background-color: #f1e6ff; /* Light purple background */
+            font-size: 1.2rem; /* Slightly larger text */
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        #raga-list li:hover {
+            background-color: #d0c3e5; /* Change background color on hover */
+            transform: scale(1.05); /* Slight scaling on hover */
+        }
+
+        .highlight {
+            background-color: #6a2c70;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Additional musical notes around the page */
+        ::before {
+            content: "\2669 \266A"; /* Unicode musical notes */
+            position: absolute;
+            font-size: 3rem;
+            color: #6a2c70;
+            top: 5%;
+            left: 5%;
+        }
+
+        ::after {
+            content: "\266B \266C"; /* Unicode musical notes */
+            position: absolute;
+            font-size: 3rem;
+            color: #6a2c70;
+            bottom: 5%;
+            right: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Indian Ragas for Different Times of Day</h1>
+    <div id="raga-container">
+        <ul id="raga-list"></ul>
+    </div>
+    <script>
+        // Define ragas for different times of day
+        const ragas = [
+            { time: 'Pre-dawn (12 AM - 3 AM)', ragas: ['Marwa', 'Shree'] },
+            { time: 'Early Morning (3 AM - 6 AM)', ragas: ['Bhairav', 'Prabhat Bhairav', 'Lalit', 'Pahadi'] },
+            { time: 'Morning (6 AM - 9 AM)', ragas: ['Yaman Kalyan', 'Miyan ki Todi', 'Ahir Bhairav', 'Todi', 'Bilaskani Todi'] },
+            { time: 'Late Morning (9 AM - 12 PM)', ragas: ['Desh', 'Jaunpuri'] },
+            { time: 'Afternoon (12 PM - 3 PM)', ragas: ['Shuddha Sarang', 'Kedar', 'Bhimpalasi', 'Vrindavani Sarang'] },
+            { time: 'Late Afternoon (3 PM - 6 PM)', ragas: ['Pahadi', 'Bhimpalasi', 'Des', 'Yaman', 'Tilak Kamod'] },
+            { time: 'Evening (6 PM - 9 PM)', ragas: ['Darbari Kanada', 'Jaijaiwanti', 'Adana'] },
+            { time: 'Night (9 PM - 12 AM)', ragas: ['Malkauns', 'Basant Bahar', 'Bhairavi', 'Bageshree'] }
+        ];
+
+        // Get current time
+        const currentTime = new Date().getHours();
+
+        // Find the appropriate ragas for the current time
+        let currentRagas = [];
+        ragas.forEach(item => {
+            const timeRange = item.time.match(/(\d+) (AM|PM) - (\d+) (AM|PM)/);
+            const startHour = parseInt(timeRange[1]) % 12 + (timeRange[2] === 'PM' ? 12 : 0);
+            const endHour = parseInt(timeRange[3]) % 12 + (timeRange[4] === 'PM' ? 12 : 0);
+            const currentHour = currentTime % 12 || 12; // convert 0 to 12 for midnight
+
+            if ((startHour < endHour && currentHour >= startHour && currentHour < endHour) ||
+                (startHour > endHour && (currentHour >= startHour || currentHour < endHour))) {
+                currentRagas = item.ragas;
+            }
+        });
+
+        // Display the ragas
+        const ragaList = document.getElementById('raga-list');
+        currentRagas.forEach(raga => {
+            const li = document.createElement('li');
+            li.textContent = raga;
+            ragaList.appendChild(li);
+        });
+
+        // Highlight the current time's ragas
+        const lis = ragaList.getElementsByTagName('li');
+        for (let i = 0; i < lis.length; i++) {
+            lis[i].classList.remove('highlight');
+            if (currentRagas.includes(lis[i].textContent)) {
+                lis[i].classList.add('highlight');
+            }
+        }
+    </script>
+</body>
+
+</html>
